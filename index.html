@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teams</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font:14px 'Segoe UI',system-ui,sans-serif;background:#1f1f1f;color:#fff;height:100vh;overflow:hidden}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:#3b3b3b;border-radius:4px;padding:7px 14px}
+button:hover{background:#474747}
+input{font:inherit;color:#fff;background:#333;border:0;border-bottom:1px solid #666;border-radius:4px;padding:9px 10px;outline:0;width:100%}
+input:focus{border-bottom-color:#7f85f5}
+small{color:#adadad;font-size:12px}
+.pri{background:#7f85f5}.pri:hover{background:#6b70e0}.red{background:#c4314b}.red:hover{background:#d13b57}.gr{background:#13a10e}
+#splash{position:fixed;inset:0;background:#1f1f1f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;z-index:99;transition:opacity .4s}
+.logo{width:88px;height:88px;border-radius:20px;background:linear-gradient(135deg,#5b5fc7,#7f85f5);display:grid;place-items:center;font-size:48px;font-weight:700;animation:pu 1.6s ease-in-out infinite}
+.logo.s{width:48px;height:48px;font-size:26px;border-radius:10px;animation:none}
+@keyframes pu{50%{transform:scale(1.06);box-shadow:0 0 40px #7f85f566}}
+.bar{width:160px;height:3px;background:#333;border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;width:40%;background:#7f85f5;animation:sl 1.2s infinite ease-in-out}
+@keyframes sl{from{margin-left:-40%}to{margin-left:100%}}
+#login{position:fixed;inset:0;display:grid;place-items:center}
+.card{background:#292929;border-radius:8px;padding:28px;width:380px;max-width:92vw;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 32px #0008}
+.card h2{font-weight:600;font-size:20px}#err{color:#ff6b81;font-size:12px}
+#app{display:flex;flex-direction:column;height:100vh}
+#top{height:48px;background:#141414;display:flex;align-items:center;padding:0 16px;gap:16px}
+#top b{width:280px;font-weight:600}#top input{max-width:440px;margin:0 auto;border-radius:6px;border:1px solid #3d3d3d;background:#2b2b2b;padding:6px 12px}
+#top .r{width:280px;text-align:right;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+#body{flex:1;display:flex;min-height:0}
+#rail{width:68px;background:#141414;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px}
+#rail .ri{width:56px;padding:8px 0;text-align:center;font-size:20px;border-radius:6px;cursor:pointer;box-shadow:inset 3px 0 #7f85f5;background:#2b2b2b}
+#rail .ri small{display:block;font-size:11px;color:#fff}
+#side{width:320px;background:#292929;border-right:1px solid #3d3d3d;display:flex;flex-direction:column}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-size:18px;font-weight:600}
+#list{overflow:auto;flex:1}.sec{padding:14px 16px 6px;font-size:12px;color:#adadad;font-weight:600}
+.it{display:flex;gap:10px;align-items:center;padding:8px 16px;cursor:pointer}.it:hover{background:#333}.it.on{background:#3a3a3a;box-shadow:inset 3px 0 #7f85f5}
+.tx{min-width:0;display:flex;flex-direction:column}.tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;font-size:12px;font-weight:600;flex:none}.av.lg{width:84px;height:84px;font-size:28px}
+#main{flex:1;position:relative;min-width:0;background:#1f1f1f}
+#empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#adadad}
+#chat{height:100%;display:flex;flex-direction:column}
+.ch{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid #333}.ch div{flex:1;display:flex;flex-direction:column}
+#msgs{flex:1;overflow:auto;padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+.m{display:flex;gap:10px;max-width:70%}.m.me{align-self:flex-end}
+.bb{background:#292929;border-radius:6px;padding:8px 12px;word-break:break-word}.me .bb{background:#3d3e66}
+.nm{font-size:12px;color:#adadad;margin-bottom:2px}.ts{font-size:11px;color:#adadad;text-align:right;margin-top:4px}
+.bb img{max-width:280px;border-radius:4px;display:block;margin-top:6px}
+.file{display:block;margin-top:6px;padding:8px 10px;background:#0004;border-radius:4px;color:#fff;text-decoration:none}
+.cp{display:flex;gap:10px;align-items:center;padding:12px 20px;border-top:1px solid #333}.att{font-size:20px;cursor:pointer}
+#call{position:absolute;inset:0;background:#1b1b1b;display:flex;flex-direction:column;z-index:5}
+.ct{padding:14px 20px;border-bottom:1px solid #333;display:flex;flex-direction:column}
+#stage{flex:1;display:flex;flex-direction:column;gap:12px;padding:16px;min-height:0}
+#scr{flex:1;min-height:0;width:100%;background:#000;border-radius:8px;object-fit:contain}#ps{text-align:center;color:#adadad}
+#tiles{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-content:center;flex:1}
+.tile{width:190px;height:150px;background:#292929;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.pr #tiles{flex:none}.pr .tile{width:130px;height:90px}.pr .av.lg{width:40px;height:40px;font-size:14px}
+.ctl{display:flex;justify-content:center;gap:12px;padding:16px;background:#141414}.ctl button{border-radius:20px;padding:10px 20px}.ctl .off{background:#c4314b}
+#gm{position:fixed;inset:0;background:#0009;display:grid;place-items:center;z-index:50}
+#gu{max-height:260px;overflow:auto}#gu label{display:flex;gap:10px;align-items:center;padding:6px;border-radius:4px}#gu label span{display:flex;flex-direction:column}#gu input{width:auto;margin-left:auto}
+#toast{position:fixed;top:60px;right:20px;background:#292929;border:1px solid #444;border-radius:8px;padding:14px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px #0008}#toast div{display:flex;flex-direction:column}
+</style></head><body>
+<div id="splash"><div class="logo">T</div><div class="bar"><i></i></div></div>
+
+<div id="login" hidden><div class="card">
+<div class="logo s">T</div><h2>Sign in to Teams</h2>
+<input id="nm" placeholder="Full name"><input id="em" type="email" placeholder="Work email (name@company.com)">
+<small id="orgh">Your organisation is taken from your email domain</small><div id="err"></div>
+<button class="pri" id="go">Sign in</button></div></div>
+
+<div id="app" hidden>
+<div id="top"><b>Teams</b><input id="q" placeholder="Search"><div class="r"><small id="st"></small><small id="org"></small></div></div>
+<div id="body">
+<nav id="rail"><div class="ri">💬<small>Chat</small></div><div style="flex:1"></div><div id="me" style="cursor:pointer" title="Sign out"></div></nav>
+<aside id="side"><div class="sh">Chat<button id="ng" title="New group chat">✎ New group</button></div><div id="list"></div></aside>
+<main id="main">
+<div id="empty"><div class="logo s">💬</div>Select a chat or a person to start</div>
+<section id="chat" hidden>
+<div class="ch"><span id="hv"></span><div><b id="hn"></b><small id="hs"></small></div><button id="bc" class="pri"></button></div>
+<div id="msgs"></div>
+<div class="cp"><label class="att">📎<input type="file" id="fi" hidden></label><input id="in" placeholder="Type a message"><button id="sd" class="pri">Send</button></div>
+</section>
+<section id="call" hidden>
+<div class="ct"><b id="ctitle"></b><small>Audio call</small></div>
+<div id="stage"><video id="scr" autoplay playsinline hidden></video><div id="ps" hidden></div><div id="tiles"></div></div>
+<div class="ctl"><button id="bm">🎤 Mute</button><button id="bs">🖥️ Share screen</button><button id="bl" class="red">Leave</button></div>
+</section>
+</main></div></div>
+
+<div id="gm" hidden><div class="card"><h2>New group chat</h2><input id="gn" placeholder="Group name"><small>Add people from your organisation</small><div id="gu"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end"><button onclick="gm.hidden=true">Cancel</button><button class="pri" id="gc">Create</button></div></div></div>
+<div id="toast" hidden></div>
+
+<script>
+// >>> Put your Render URL here (no trailing slash)
+const API='https://teams-be.onrender.com';
+const $=s=>document.querySelector(s),enc=encodeURIComponent;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const api=(p,b)=>fetch(API+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
+const av=(n,c='')=>`<span class="av ${c}" style="background:hsl(${Math.abs([...n].reduce((a,x)=>a*31+x.charCodeAt(0)|0,7))%360} 45% 38%)">${esc(n.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase())}</span>`;
+const ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+let me,users=[],groups=[],cur=null,since=0,filter='',lastSide='',busy=0,C=null;
+
+// ---------- boot ----------
+setTimeout(()=>{$('#splash').style.opacity=0;setTimeout(()=>$('#splash').remove(),400);
+  try{me=JSON.parse(sessionStorage.me)}catch(e){} me?start():$('#login').hidden=false},1800);
+$('#em').oninput=()=>{const d=$('#em').value.split('@')[1];$('#orgh').textContent=d?'Organisation: '+d.toLowerCase():'Your organisation is taken from your email domain'};
+$('#go').onclick=async()=>{$('#go').textContent='Signing in…';
+  const r=await api('/api/login',{name:$('#nm').value,email:$('#em').value}).catch(()=>({error:'Server unreachable (it may be waking up, retry in 30s)'}));
+  $('#go').textContent='Sign in';if(r.error)return $('#err').textContent=r.error;
+  me=r;sessionStorage.me=JSON.stringify(r);$('#login').hidden=true;start()};
+function start(){$('#login').hidden=true;$('#app').hidden=false;$('#me').innerHTML=av(me.name);$('#org').textContent=me.name+' · '+me.org;tick();setInterval(tick,1000)}
+$('#me').onclick=()=>confirm('Sign out?')&&(sessionStorage.clear(),location.reload());
+$('#q').oninput=e=>{filter=e.target.value;lastSide='';renderSide()};
+
+// ---------- polling ----------
+async function tick(){if(busy)return;busy=1;
+  try{const r=await api(`/api/poll?email=${enc(me.email)}&gid=${enc(cur||'')}&since=${since}`);
+    if(r.error)await api('/api/login',me);
+    else{$('#st').textContent='';users=r.users;groups=r.groups.sort((a,b)=>b.ts-a.ts);
+      if(r.gid===(cur||'')&&r.msgs.length){const i=since===0;since+=r.msgs.length;addMsgs(r.msgs,i)}
+      renderSide();head();for(const s of r.signals)await onSignal(s)}
+  }catch(e){$('#st').textContent='Reconnecting…'}busy=0}
+const gname=g=>g.dm?(users.find(u=>u.email===g.members.find(m=>m!==me.email))?.name||'Chat'):g.name;
+function renderSide(){const f=filter.toLowerCase();
+  const h='<div class="sec">Chats</div>'+groups.filter(g=>gname(g).toLowerCase().includes(f)).map(g=>`<div class="it ${g.id===cur?'on':''}" data-g="${esc(g.id)}">${av(gname(g))}<div class="tx"><b>${esc(gname(g))}</b><small>${g.call?'📞 Call in progress':esc(g.last)}</small></div></div>`).join('')
+  +`<div class="sec">${esc(me.org)} · ${users.length} member${users.length>1?'s':''}</div>`+(users.length<2?`<div style="padding:8px 16px"><small>Nobody else from ${esc(me.org)} has signed in yet. Ask colleagues to sign in with an @${esc(me.org)} email.</small></div>`:'')+users.filter(u=>u.email!==me.email&&u.name.toLowerCase().includes(f)).map(u=>`<div class="it" data-u="${esc(u.email)}">${av(u.name)}<div class="tx"><b>${esc(u.name)}</b><small>${u.online?'● Available':'Offline'}</small></div></div>`).join('');
+  if(h!==lastSide){lastSide=h;$('#list').innerHTML=h}}
+$('#list').onclick=async e=>{const it=e.target.closest('.it');if(!it)return;
+  if(it.dataset.g)return openChat(it.dataset.g);
+  const g=await api('/api/group',{dm:1,members:[it.dataset.u],email:me.email});if(!groups.find(x=>x.id===g.id))groups.unshift(g);openChat(g.id)};
+function openChat(id){cur=id;since=0;$('#msgs').innerHTML='';$('#empty').hidden=true;$('#chat').hidden=false;lastSide='';renderSide();head()}
+function head(){const g=groups.find(x=>x.id===cur);if(!g)return;$('#hn').textContent=gname(g);$('#hs').textContent=g.dm?'Direct chat':g.members.length+' members';
+  $('#hv').innerHTML=av(gname(g));$('#bc').textContent=g.call?'📞 Join call':g.dm?'📞 Audio call':'📞 Group call'}
+
+// ---------- groups ----------
+$('#ng').onclick=()=>{$('#gm').hidden=false;$('#gn').value='';
+  $('#gu').innerHTML=users.filter(u=>u.email!==me.email).map(u=>`<label>${av(u.name)}<span>${esc(u.name)}<small>${esc(u.email)}</small></span><input type="checkbox" value="${esc(u.email)}"></label>`).join('')||'<small>No one else from your organisation has joined yet.</small>'};
+$('#gc').onclick=async()=>{const m=[...document.querySelectorAll('#gu input:checked')].map(i=>i.value),n=$('#gn').value.trim();
+  if(!n||!m.length)return alert('Enter a group name and pick at least one member');
+  const g=await api('/api/group',{name:n,members:m,email:me.email});$('#gm').hidden=true;groups.unshift(g);openChat(g.id)};
+
+// ---------- chat + files ----------
+function addMsgs(ms,init){const box=$('#msgs'),end=init||box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  ms.forEach(m=>{const mine=m.from===me.email,f=m.file;
+    box.insertAdjacentHTML('beforeend',`<div class="m ${mine?'me':''}">${mine?'':av(m.name)}<div class="bb">${mine?'':`<div class="nm">${esc(m.name)}</div>`}${m.text?`<div>${esc(m.text)}</div>`:''}${f?(f.type.startsWith('image/')?`<img src="${esc(f.data)}">`:'')+`<a class="file" href="${esc(f.data)}" download="${esc(f.name)}">📄 ${esc(f.name)} <small>${(f.size/1024).toFixed(1)} KB</small></a>`:''}<div class="ts">${new Date(m.ts*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div></div>`)});
+  if(end)box.scrollTop=box.scrollHeight}
+async function send(file){const t=$('#in').value.trim();if(!t&&!file||!cur)return;$('#in').value='';
+  await api('/api/send',{gid:cur,email:me.email,name:me.name,text:t,file})}
+$('#sd').onclick=()=>send();$('#in').onkeydown=e=>e.key==='Enter'&&send();
+$('#fi').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>3e6)return alert('Max file size is 3 MB');
+  const r=new FileReader();r.onload=()=>send({name:f.name,type:f.type||'application/octet-stream',size:f.size,data:r.result});r.readAsDataURL(f)};
+
+// ---------- calls (WebRTC mesh, signalling via server) ----------
+const sig=(to,t,data)=>api('/api/signal',{to,t,email:me.email,name:me.name,data});
+function tile(id,name){if(document.getElementById('t-'+id))return;
+  $('#tiles').insertAdjacentHTML('beforeend',`<div class="tile" id="t-${esc(id)}">${av(name,'lg')}<small>${esc(name)}</small><audio autoplay></audio></div>`)}
+function present(s,label,mute){const v=$('#scr');v.srcObject=s;v.muted=!!mute;v.hidden=false;v.play().catch(()=>{});$('#ps').hidden=false;$('#ps').textContent=label;$('#stage').classList.add('pr')}
+function unpresent(){const v=$('#scr');v.srcObject=null;v.hidden=true;$('#ps').hidden=true;$('#stage').classList.remove('pr')}
+function mk(id){const pc=new RTCPeerConnection(ICE);C.pcs[id]=pc;pc.q=[];
+  pc.onicecandidate=e=>e.candidate&&sig(id,'ice',e.candidate);
+  pc.ontrack=e=>{if(e.track.kind==='audio'){const t=document.getElementById('t-'+id);if(t)t.querySelector('audio').srcObject=e.streams[0]||new MediaStream([e.track])}else C.vids[id]=new MediaStream([e.track])};return pc}
+function attach(pc){C.stream.getAudioTracks().forEach(t=>pc.addTrack(t,C.stream));
+  let v=pc.getTransceivers().find(t=>t.receiver.track.kind==='video');if(!v)v=pc.addTransceiver('video');v.direction='sendrecv';pc.vt=v;
+  if(C.screen)v.sender.replaceTrack(C.screen.getVideoTracks()[0])}
+const flush=pc=>pc.q.splice(0).forEach(c=>pc.addIceCandidate(c).catch(()=>{}));
+async function begin(noRing){if(C)return;const g=groups.find(x=>x.id===cur);if(!g)return;
+  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){return alert('Allow microphone access to join calls (HTTPS required)')}
+  C={room:g.id,pcs:{},stream:st,screen:null,vids:{},muted:false};
+  $('#call').hidden=false;$('#tiles').innerHTML='';$('#ctitle').textContent=gname(g);$('#bm').textContent='🎤 Mute';$('#bm').classList.remove('off');$('#bs').textContent='🖥️ Share screen';tile(me.email,me.name+' (You)');
+  const r=await api('/api/call',{act:'join',room:g.id,email:me.email,name:me.name,title:g.dm?'Audio call':'Group call · '+g.name,ring:noRing||g.call?[]:g.members.filter(m=>m!==me.email)});
+  for(const p of r.peers){tile(p.email,p.name);const pc=mk(p.email);attach(pc);await pc.setLocalDescription(await pc.createOffer());sig(p.email,'offer',pc.localDescription)}}
+async function onSignal(s){
+  if(s.t==='ring'){if(!C)ring(s);return}if(!C)return;
+  if(s.t==='left'){C.pcs[s.from]?.close();delete C.pcs[s.from];document.getElementById('t-'+s.from)?.remove();if(C.pres===s.from){unpresent();C.pres=null}return}
+  if(s.t==='screen'){if(s.data){C.pres=s.from;if(C.vids[s.from])present(C.vids[s.from],s.name+' is presenting')}else if(C.pres===s.from){unpresent();C.pres=null}return}
+  let pc=C.pcs[s.from];
+  if(s.t==='offer'){tile(s.from,s.name);pc=pc||mk(s.from);await pc.setRemoteDescription(s.data);attach(pc);
+    await pc.setLocalDescription(await pc.createAnswer());sig(s.from,'answer',pc.localDescription);flush(pc);if(C.screen)sig(s.from,'screen',true)}
+  else if(s.t==='answer'&&pc){await pc.setRemoteDescription(s.data);flush(pc)}
+  else if(s.t==='ice'&&pc){pc.remoteDescription?pc.addIceCandidate(s.data).catch(()=>{}):pc.q.push(s.data)}}
+function ring(s){const t=$('#toast');t.hidden=false;
+  t.innerHTML=`${av(s.name)}<div><b>${esc(s.name)}</b><small>${esc(s.title||'is calling you')}</small></div><button class="gr" id="acc">Accept</button><button class="red" id="dec">Decline</button>`;
+  $('#dec').onclick=()=>t.hidden=true;$('#acc').onclick=()=>{t.hidden=true;openChat(s.room);begin(true)};setTimeout(()=>t.hidden=true,30000)}
+async function leave(){if(!C)return;const c=C;C=null;Object.values(c.pcs).forEach(p=>p.close());c.stream.getTracks().forEach(t=>t.stop());c.screen?.getTracks().forEach(t=>t.stop());
+  $('#call').hidden=true;unpresent();await api('/api/call',{act:'leave',room:c.room,email:me.email}).catch(()=>{})}
+function stopShare(){if(!C?.screen)return;C.screen.getTracks().forEach(t=>t.stop());C.screen=null;
+  Object.keys(C.pcs).forEach(p=>{C.pcs[p].vt.sender.replaceTrack(null);sig(p,'screen',false)});unpresent();$('#bs').textContent='🖥️ Share screen'}
+async function share(){if(C.screen)return stopShare();
+  try{C.screen=await navigator.mediaDevices.getDisplayMedia({video:true})}catch(e){return}
+  const t=C.screen.getVideoTracks()[0];t.onended=stopShare;
+  Object.keys(C.pcs).forEach(p=>{C.pcs[p].vt.sender.replaceTrack(t);sig(p,'screen',true)});present(C.screen,'You are presenting',true);$('#bs').textContent='⏹ Stop sharing'}
+$('#bc').onclick=()=>begin();$('#bl').onclick=leave;$('#bs').onclick=share;
+$('#bm').onclick=()=>{C.muted=!C.muted;C.stream.getAudioTracks().forEach(t=>t.enabled=!C.muted);$('#bm').textContent=C.muted?'🔇 Unmute':'🎤 Mute';$('#bm').classList.toggle('off',C.muted)};
+addEventListener('beforeunload',()=>{if(C)navigator.sendBeacon(API+'/api/call',new Blob([JSON.stringify({act:'leave',room:C.room,email:me.email})],{type:'application/json'}))});
+</script></body></html>
